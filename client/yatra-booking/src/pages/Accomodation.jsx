@@ -9,7 +9,7 @@ const dateRef = useRef();
   const [rooms, setRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedInventoryId, setSelectedInventoryId] = useState(null);
-
+const [showSummary, setShowSummary] = useState(false);
   const [location, setLocation] = useState("Katra");
   const [numberOfDays, setNumberOfDays] = useState(1);
   const [checkInDate, setCheckInDate] = useState("");
@@ -105,6 +105,50 @@ const dateRef = useRef();
     },
   });
 };
+const validateForm = () => {
+  if (selectedRoom === null) {
+    return "Please select a room";
+  }
+
+  if (!checkInDate) {
+    return "Please select check-in date";
+  }
+
+  if (unitsBooked < 1) {
+    return "At least 1 room required";
+  }
+
+  if (unitsBooked > 2) {
+    return "Maximum 2 rooms allowed";
+  }
+
+  const room = rooms[selectedRoom];
+
+  if (unitsBooked > room.availableUnits) {
+    return "Not enough rooms available";
+  }
+
+  if (totalPersons < 1) {
+    return "At least 1 pilgrim required";
+  }
+
+  if (totalPersons > unitsBooked * room.capacityPerUnit) {
+    return "Room capacity exceeded";
+  }
+
+  for (let i = 0; i < pilgrims.length; i++) {
+    const p = pilgrims[i];
+
+    if (!p.name) return `Pilgrim ${i + 1}: Name required`;
+    if (!p.gender) return `Pilgrim ${i + 1}: Gender required`;
+    if (!p.age || p.age <= 0)
+      return `Pilgrim ${i + 1}: Valid age required`;
+    if (!p.idType) return `Pilgrim ${i + 1}: ID Type required`;
+    if (!p.idNumber) return `Pilgrim ${i + 1}: ID Number required`;
+  }
+
+  return null;
+};
 
 
   return (
@@ -115,7 +159,8 @@ const dateRef = useRef();
         <h3 className="font-bold mb-2">Important Instructions:</h3>
         <ul className="list-disc ml-6 text-sm space-y-1">
           <li>Rooms will not be allotted for Single Persons.</li>
-          <li>Maximum booking allowed for 2 days only.</li>
+          <li>Maximum booking allowed for one day only.</li>
+           <li>You can only book 2 rooms per user.</li>
           <li>Details once submitted cannot be modified.</li>
         </ul>
       </div>
@@ -313,23 +358,79 @@ const dateRef = useRef();
         ))}
 
       </div>
-
-      {/* MESSAGE */}
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-      {message && <p className="text-green-600 mt-2">{message}</p>}
-
-      {/* BUTTON */}
-      <div className="flex justify-end gap-4 mt-6">
-        <button className="px-4 py-2 bg-gray-300 rounded">
-          Clear
-        </button>
+       {/* MESSAGE */}
+      {error && <p className="text-red-500">{error}</p>}
+      {message && <p className="text-green-600">{message}</p>}
+  <div className="flex justify-end mt-4">
         <button
-          onClick={handleBooking}
+          onClick={() => {
+            const errorMsg = validateForm();
+            if (errorMsg) {
+              setError(errorMsg);
+              return;
+            }
+
+            setError("");
+            setShowSummary(true);
+          }}
           className="px-6 py-2 bg-[#8B0000] text-white rounded"
         >
           Submit
         </button>
       </div>
+
+  {showSummary && selectedRoom !== null && (
+  <div className="bg-white border rounded-xl p-4 mt-6 shadow">
+    <h3 className="font-semibold text-lg text-[#8B0000] mb-3">
+      Booking Summary
+    </h3>
+
+    <div className="text-sm space-y-1 mb-3">
+      <p>Location: <b>{location}</b></p>
+      <p>Check-in: <b>{checkInDate}</b></p>
+      <p>Days: <b>{numberOfDays}</b></p>
+      <p>Rooms: <b>{unitsBooked}</b></p>
+      <p>Total Pilgrims: <b>{totalPersons}</b></p>
+    </div>
+
+    {/* PILGRIMS */}
+    <div className="border rounded-lg overflow-hidden">
+      <div className="grid grid-cols-4 bg-[#8B0000] text-white text-sm p-2 font-semibold">
+        <div>Name</div>
+        <div>Gender</div>
+        <div>Age</div>
+        <div>ID</div>
+      </div>
+
+      {pilgrims.map((p, index) => (
+        <div key={index} className="grid grid-cols-4 text-sm p-2 border-t">
+          <div>{p.name}</div>
+          <div>{p.gender}</div>
+          <div>{p.age}</div>
+          <div>{p.idNumber}</div>
+        </div>
+      ))}
+    </div>
+
+    {/* TOTAL */}
+    <div className="mt-4 flex justify-between items-center">
+      <p className="text-lg font-bold text-green-600">
+        Total Amount: ₹{
+          unitsBooked *
+          rooms[selectedRoom].price *
+          numberOfDays
+        }
+      </p>
+
+      <button
+        onClick={handleBooking}
+        className="px-6 py-2 bg-green-600 text-white rounded"
+      >
+        Proceed to Pay
+      </button>
+    </div>
+  </div>
+)}
 
     </div>
   );

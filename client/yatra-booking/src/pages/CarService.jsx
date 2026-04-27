@@ -8,7 +8,7 @@ function CarService() {
   const dateRef = useRef();
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [slots, setSlots] = useState([]);
-
+  const [showSummary, setShowSummary] = useState(false);
   const [route, setRoute] = useState("Ardhkuwari - Bhawan");
   const [date, setDate] = useState("");
 
@@ -56,80 +56,87 @@ function CarService() {
   }, [route, date]);
 
   // BOOKING
-const handleBooking = () => {
-  setError("");
-  setMessage("");
+  const handleBooking = () => {
+    if (!selectedSlot) {
+      setError("Please select a slot");
+      return;
+    }
+    setError("");
+    setMessage("");
+    const errorMsg = validateForm();
+    if (errorMsg) {
+      setError(errorMsg);
+      return;
+    }
+    const capacity = selectedSlot.capacityPerUnit;
+    const unitsRequired = Math.ceil(totalPilgrims / capacity);
 
-  const errorMsg = validateForm();
-
-  if (errorMsg) {
-    setError(errorMsg);
-    return;
-  }
-
-  handlePayment({
-    amount: totalPilgrims * selectedSlot.price,
-    bookingData: {
-      inventoryId: selectedInventoryId,
-      totalPersons: totalPilgrims,
-      unitsBooked:totalPilgrims,
-      pilgrims,
-    },
-    navigate
-  });
-};
+    handlePayment({
+      amount: totalPilgrims * selectedSlot.price,
+      bookingData: {
+        inventoryId: selectedInventoryId,
+        totalPersons: totalPilgrims,
+        unitsBooked: unitsRequired,
+        pilgrims,
+      },
+      navigate
+    });
+  };
   const handlePilgrimChange = (index, field, value) => {
     const updated = [...pilgrims];
     updated[index][field] = value;
     setPilgrims(updated);
   };
   const validateForm = () => {
-  if (!selectedInventoryId) {
-    return "Please select a slot";
-  }
+    if (!selectedInventoryId) {
+      return "Please select a slot";
+    }
 
-  if (!date) {
-    return "Please select a travel date";
-  }
+    if (!date) {
+      return "Please select a travel date";
+    }
 
-  if (totalPilgrims < 1) {
-    return "At least 1 pilgrim required";
-  }
+    if (totalPilgrims < 1) {
+      return "At least 1 pilgrim required";
+    }
 
-  if (totalPilgrims > 6) {
-    return "Maximum 6 pilgrims allowed";
-  }
+    if (
+      selectedSlot &&
+      totalPilgrims >
+      selectedSlot.capacityPerUnit * selectedSlot.availableUnits
+    ) {
+      return "Not enough cars available";
+    }
+    for (let i = 0; i < pilgrims.length; i++) {
+      const p = pilgrims[i];
 
-  for (let i = 0; i < pilgrims.length; i++) {
-    const p = pilgrims[i];
+      if (!p.name) return `Pilgrim ${i + 1}: Name required`;
+      if (!p.gender) return `Pilgrim ${i + 1}: Gender required`;
+      if (!p.age || p.age <= 0) return `Pilgrim ${i + 1}: Valid age required`;
+      if (!p.idType) return `Pilgrim ${i + 1}: ID Type required`;
+      if (!p.idNumber) return `Pilgrim ${i + 1}: ID Number required`;
+    }
 
-    if (!p.name) return `Pilgrim ${i + 1}: Name required`;
-    if (!p.gender) return `Pilgrim ${i + 1}: Gender required`;
-    if (!p.age || p.age <= 0) return `Pilgrim ${i + 1}: Valid age required`;
-    if (!p.idType) return `Pilgrim ${i + 1}: ID Type required`;
-    if (!p.idNumber) return `Pilgrim ${i + 1}: ID Number required`;
-  }
-
-  return null;
-};
+    return null;
+  };
 
   return (
     <div className="px-12 py-6 bg-[#fdf6f6]">
- {/* INSTRUCTIONS */}
-<div className="mb-6">
-  <h3 className="font-bold mb-2">Important Instructions:</h3>
-  <ul className="list-disc ml-6 text-sm space-y-1">
-    <li>Battery car booking is required for pilgrims of age 5 years and above only.</li>
-    <li>
-      Infants/Children below 5 years of age will be allowed to travel free
-      (to be carried in lap) and equivalent to the number of Pilgrims.
-    </li>
-    <li>
-      The details once submitted at the time of Booking will not be modified and
-      change in Service Dates / Name change will not be entertained once the Booking is completed.
-    </li>
-  </ul>
-</div>
+      {/* INSTRUCTIONS */}
+      <div className="mb-6">
+        <h3 className="font-bold mb-2">Important Instructions:</h3>
+        <ul className="list-disc ml-6 text-sm space-y-1">
+          <li>Battery car booking is required for pilgrims of age 5 years and above only.</li>
+          <li>
+            Infants/Children below 5 years of age will be allowed to travel free
+            (to be carried in lap) and equivalent to the number of Pilgrims.
+          </li>
+          <li>
+            The details once submitted at the time of Booking will not be modified and
+            change in Service Dates / Name change will not be entertained once the Booking is completed.
+          </li>
+        </ul>
+      </div>
       <h2 className="text-xl font-bold text-[#8B0000] border-b pb-2 mb-4">
         Battery Car Booking Details
       </h2>
@@ -166,36 +173,55 @@ const handleBooking = () => {
       <h3>Select Slot *</h3>
 
       <div className="flex gap-4 mb-4">
-        {slots.map((slot, index) => {
-          const isSelected = selectedSlot?._id === slot._id;
+        <div className="flex gap-4 mb-6 flex-wrap">
+          {slots.length === 0 && date && (
+            <p className="text-red-500 text-sm">
+              No slots available for selected date
+            </p>
+          )}
+          {slots.map((slot) => {
+            const isSelected = selectedSlot?._id === slot._id;
 
-          return (
-            <div
-              key={slot._id}
-              onClick={() => {
-                if (slot.availableUnits > 0) {
-                  setSelectedSlot(slot);
-                  setSelectedInventoryId(slot._id);
-                }
-              }}
-              className={`border rounded-lg p-4 w-40 text-center cursor-pointer ${isSelected ? "border-orange-500" : "border-gray-300"
-                }`}
-            >
+            const totalSeats =
+              slot.availableUnits * slot.capacityPerUnit;
+
+            return (
               <div
-                className={`p-2 rounded text-white ${isSelected ? "bg-orange-500" : "bg-green-500"
+                key={slot._id}
+                onClick={() => {
+                  if (slot.availableUnits > 0) {
+                    setSelectedSlot(slot);
+                    setSelectedInventoryId(slot._id);
+                  }
+                }}
+                className={`border rounded-xl p-4 w-52 cursor-pointer transition ${isSelected
+                  ? "border-orange-500 bg-orange-50"
+                  : "border-gray-300 bg-white"
                   }`}
               >
-                {slot.time}
-              </div>
+                {/* TIME */}
+                <div
+                  className={`p-2 rounded text-center text-white ${isSelected ? "bg-orange-500" : "bg-green-500"
+                    }`}
+                >
+                  {slot.time}
+                </div>
 
-              <p className="mt-2 text-sm">
-                {slot.availableUnits === 0
-                  ? "Full"
-                  : `Availability: ${slot.availableUnits}`}
-              </p>
-            </div>
-          );
-        })}
+                {/* AVAILABILITY */}
+                <p className="text-center mt-3 text-sm">
+                  {totalSeats === 0
+                    ? "Full"
+                    : `${totalSeats} seats available`}
+                </p>
+
+                {/* EXTRA INFO */}
+                <p className="text-center text-xs text-gray-500 mt-1">
+                  {slot.capacityPerUnit} per car
+                </p>
+              </div>
+            );
+          })}
+        </div>
       </div>
       {/* PILGRIM DETAILS */}
       <div className="my-5">
@@ -231,7 +257,7 @@ const handleBooking = () => {
         Pilgrim Details
       </h3>
 
-      <div className="border">
+      <div className="border mb-5">
 
         <div className="grid grid-cols-7 bg-[#8B0000] text-white text-sm font-semibold p-2">
           <div>S.No.</div>
@@ -295,20 +321,76 @@ const handleBooking = () => {
         ))}
 
       </div>
-
-      {/* MESSAGE */}
-      {error && <p className="text-red-500">{error}</p>}
-      {message && <p className="text-green-600">{message}</p>}
-
       {/* BUTTON */}
-      <div className="flex justify-end mt-6">
+      <div className="flex justify-end">
         <button
-          onClick={handleBooking}
+          onClick={() => {
+            const errorMsg = validateForm();
+            if (errorMsg) {
+              setError(errorMsg);
+              return;
+            }
+
+            setError("");
+            setShowSummary(true);
+          }}
           className="px-6 py-2 bg-[#8B0000] text-white rounded"
         >
           Submit
         </button>
       </div>
+      {showSummary && selectedSlot && (
+        <div className="bg-white border rounded-xl p-4 mt-6 shadow">
+          <h3 className="font-semibold text-lg text-[#8B0000] mb-3">
+            Booking Summary
+          </h3>
+
+          <div className="text-sm space-y-1 mb-3">
+            <p>Route: <b>{route}</b></p>
+            <p>Date: <b>{date}</b></p>
+            <p>Time: <b>{selectedSlot.time}</b></p>
+            <p>Total Pilgrims: <b>{totalPilgrims}</b></p>
+          </div>
+
+          {/* PILGRIMS */}
+          <div className="border rounded-lg overflow-hidden">
+            <div className="grid grid-cols-4 bg-[#8B0000] text-white text-sm p-2 font-semibold">
+              <div>Name</div>
+              <div>Gender</div>
+              <div>Age</div>
+              <div>ID</div>
+            </div>
+
+            {pilgrims.map((p, index) => (
+              <div key={index} className="grid grid-cols-4 text-sm p-2 border-t">
+                <div>{p.name}</div>
+                <div>{p.gender}</div>
+                <div>{p.age}</div>
+                <div>{p.idNumber}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* TOTAL */}
+          <div className="mt-4 flex justify-between items-center">
+            <p className="text-lg font-bold text-green-600">
+              Total Amount: ₹{totalPilgrims * selectedSlot.price}
+            </p>
+
+            <button
+              onClick={handleBooking}
+              className="px-6 py-2 bg-green-600 text-white rounded"
+            >
+              Proceed to Pay
+            </button>
+          </div>
+        </div>
+      )}
+      {/* MESSAGE */}
+      {error && <p className="text-red-500">{error}</p>}
+      {message && <p className="text-green-600">{message}</p>}
+
+
     </div>
   );
 }

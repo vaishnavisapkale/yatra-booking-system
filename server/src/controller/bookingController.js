@@ -41,12 +41,18 @@ async function BookService(req, res) {
             requiredUnits = unitsBooked
         } else {
             //ropeway or battery car
-            if (totalPersons > inventory.availableUnits) {
+            const unitsRequired = Math.ceil(
+                totalPersons / inventory.capacityPerUnit
+            );
+
+            if (unitsRequired > inventory.availableUnits) {
                 return res.status(400).json({
-                    message: "Not enough seats"
+                    message: "Not enough vehicles available"
                 });
             }
-            requiredUnits = totalPersons;
+
+            requiredUnits = unitsRequired;
+
         }
         const updatedInventory = await inventoryModel.findOneAndUpdate(
             {
@@ -152,7 +158,10 @@ async function cancelService(req, res) {
         if (type == "accommodation") {
             unitsToRestore = booking.unitsBooked
         } else {
-            unitsToRestore = booking.totalPersons
+            unitsToRestore = Math.ceil(
+                booking.totalPersons / inventory.capacityPerUnit
+            );
+
         }
 
         await inventoryModel.findByIdAndUpdate(

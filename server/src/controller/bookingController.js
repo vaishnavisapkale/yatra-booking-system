@@ -178,7 +178,6 @@ async function getAllBooking(req, res) {
     try {
         const bookings = await bookingModel
             .find()
-            .populate("user", "email")
             .populate("inventory")
             .sort({ createdAt: -1 });
 

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import API from "../services/api";
 import { useRef } from "react";
+import { handlePayment } from "../services/paymentService";
+import { useNavigate } from "react-router-dom";
 
 function CarService() {
   const dateRef = useRef();
@@ -19,6 +21,7 @@ function CarService() {
 
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const getRoutePoints = (route) => {
     if (route === "Ardhkuwari - Bhawan") {
@@ -53,37 +56,62 @@ function CarService() {
   }, [route, date]);
 
   // BOOKING
-  const handleBooking = async () => {
-    setError("");
-    setMessage("");
+const handleBooking = () => {
+  setError("");
+  setMessage("");
 
-    if (!selectedInventoryId) {
-      setError("Please select a slot");
-      return;
-    }
-    if (totalPilgrims > 6) {
-      setError("Maximum 6 pilgrims allowed");
-      return;
-    }
+  const errorMsg = validateForm();
 
-    try {
-      await API.post("/booking/book", {
-        inventoryId: selectedInventoryId,
-        totalPersons: totalPilgrims,
-        unitsBooked:totalPilgrims,
-        pilgrims
-      });
+  if (errorMsg) {
+    setError(errorMsg);
+    return;
+  }
 
-      setMessage("Booking successful");
-    } catch (err) {
-      setError(err.response?.data?.message || "Booking failed");
-    }
-  };
+  handlePayment({
+    amount: totalPilgrims * selectedSlot.price,
+    bookingData: {
+      inventoryId: selectedInventoryId,
+      totalPersons: totalPilgrims,
+      unitsBooked:totalPilgrims,
+      pilgrims,
+    },
+    navigate
+  });
+};
   const handlePilgrimChange = (index, field, value) => {
     const updated = [...pilgrims];
     updated[index][field] = value;
     setPilgrims(updated);
   };
+  const validateForm = () => {
+  if (!selectedInventoryId) {
+    return "Please select a slot";
+  }
+
+  if (!date) {
+    return "Please select a travel date";
+  }
+
+  if (totalPilgrims < 1) {
+    return "At least 1 pilgrim required";
+  }
+
+  if (totalPilgrims > 6) {
+    return "Maximum 6 pilgrims allowed";
+  }
+
+  for (let i = 0; i < pilgrims.length; i++) {
+    const p = pilgrims[i];
+
+    if (!p.name) return `Pilgrim ${i + 1}: Name required`;
+    if (!p.gender) return `Pilgrim ${i + 1}: Gender required`;
+    if (!p.age || p.age <= 0) return `Pilgrim ${i + 1}: Valid age required`;
+    if (!p.idType) return `Pilgrim ${i + 1}: ID Type required`;
+    if (!p.idNumber) return `Pilgrim ${i + 1}: ID Number required`;
+  }
+
+  return null;
+};
 
   return (
     <div className="px-12 py-6 bg-[#fdf6f6]">
@@ -139,14 +167,14 @@ function CarService() {
 
       <div className="flex gap-4 mb-4">
         {slots.map((slot, index) => {
-          const isSelected = selectedSlot === index;
+          const isSelected = selectedSlot?._id === slot._id;
 
           return (
             <div
               key={slot._id}
               onClick={() => {
                 if (slot.availableUnits > 0) {
-                  setSelectedSlot(index);
+                  setSelectedSlot(slot);
                   setSelectedInventoryId(slot._id);
                 }
               }}

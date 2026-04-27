@@ -14,11 +14,9 @@ function MyBookings() {
   if (!confirmCancel) return;
 
   try {
-    await API.delete(`/booking/cancel/${id}`);
-
+    await API.post(`/booking/cancel/${id}`);
     // refresh list
     fetchBookings();
-
   } catch (err) {
     console.log("Cancel error:", err);
   }
@@ -54,7 +52,7 @@ const getRoute = (inventory) => {
   }
   // carservice / ropeway case
   if (inventory?.pickupPoint && inventory?.dropPoint) {
-    return `${inventory.pickupPoint} → ${inventory.dropPoint}`;
+    return `${inventory.time} ${inventory.pickupPoint} → ${inventory.dropPoint}`;
   }
   return "-";
 };

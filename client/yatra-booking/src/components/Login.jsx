@@ -20,11 +20,15 @@ function Login() {
         email,
         password
       });
-      console.log(data)
       setMessage(data.message);
       localStorage.setItem("token", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken); 
-      navigate("/dashboard");
+      localStorage.setItem("refreshToken", data.refreshToken);
+      localStorage.setItem("role", data.user.role);
+      if (data.user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
       setEmail("");
       setPassword("");
     } catch (err) {
@@ -81,15 +85,15 @@ function Login() {
             />
           </div>
           <p className="text-sm underline mb-5 px-2 py-1 text-orange-600 cursor-pointer">
-  <Link to="/forgot-password">Forgot Password?</Link>
-</p>
+            <Link to="/forgot-password">Forgot Password?</Link>
+          </p>
           {error && (
             <p className="text-red-500 text-sm mb-5 px-2">{error}</p>
           )}
           {message && (
             <p className="text-green-600 text-sm mb-5 px-2 ">{message}</p>
           )}
-          <button   disabled={ !email || !password}onClick={handleLogin} className="w-full bg-orange-500 text-white p-3 rounded-lg font-semibold hover:bg-orange-600 hover:shadow-md transition duration-300 disabled:opacity-50">
+          <button disabled={!email || !password} onClick={handleLogin} className="w-full bg-orange-500 text-white p-3 rounded-lg font-semibold hover:bg-orange-600 hover:shadow-md transition duration-300 disabled:opacity-50">
             Login
           </button>
           <p className="text-sm text-center mt-6">

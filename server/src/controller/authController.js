@@ -47,7 +47,17 @@ async function loginUser(req, res) {
 
     user.refreshTokens.push({ token: refreshToken });
     await user.save();
-    res.status(200).json({ message: "Login successful", accessToken, refreshToken })
+    res.status(200).json({ 
+        message: "Login successful", 
+        accessToken, 
+        refreshToken,
+          user: {
+    id: user._id,
+    email: user.email,
+    role: user.role
+  }
+
+     })
 }
 
 //refresh-token api

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import API from "../services/api";
 import { useRef } from "react";
-
-
+import { handlePayment } from "../services/paymentService";
+import { useNavigate } from "react-router-dom";
 
 function Accommodation() {
 const dateRef = useRef();
@@ -23,6 +23,7 @@ const dateRef = useRef();
   const [error, setError] = useState("");
 
   const [loading, setLoading] = useState(false);
+
 
   //  FETCH ROOMS (location + date based)
   useEffect(() => {
@@ -69,37 +70,42 @@ const dateRef = useRef();
     updated[index][field] = value;
     setPilgrims(updated);
   };
-
+  const navigate = useNavigate();
   //  BOOKING API
-  const handleBooking = async () => {
+  const handleBooking = () => {
     setError("");
-    setMessage("");
+  setMessage("");
 
-    if (!selectedInventoryId) {
-      setError("Please select a room");
-      return;
-    }
+  const errorMsg = validateForm();
 
-    try {
-      await API.post("/booking/book", {
-        inventoryId: selectedInventoryId,
-        unitsBooked,
-        totalPersons,
-        checkInDate,
-        numberOfDays,
-        pilgrims
-      });
+  if (errorMsg) {
+    setError(errorMsg);
+    return;
+  }
 
-      setMessage("Booking successful");
+  const selectedRoomData = rooms[selectedRoom];
+  const totalAmount =
+    unitsBooked * selectedRoomData.price * numberOfDays;
+  handlePayment({
+    amount: totalAmount,
+    bookingData: {
+      inventoryId: selectedInventoryId,
+      unitsBooked,
+      totalPersons,
+      checkInDate,
+      numberOfDays,
+      pilgrims,
+    },
+    navigate,
+    onSuccess: () => {
+      setMessage("Booking Successful ✅");
+    },
+    onError: (msg) => {
+      setError(msg);
+    },
+  });
+};
 
-      // clear form
-      setSelectedRoom(null);
-      setSelectedInventoryId(null);
-      setPilgrims([]);
-    } catch (err) {
-      setError(err.response?.data?.message || "Booking failed ");
-    }
-  };
 
   return (
     <div className="min-h-full bg-[#fdf6f6] px-12 py-6">

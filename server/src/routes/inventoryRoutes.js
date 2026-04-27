@@ -5,14 +5,12 @@ const inventoryController = require("../controller/inventoryController")
 const authMiddleware = require("../middleware/authMiddleware")
 
 router.post("/", authMiddleware.protect, authMiddleware.authorizedRole("admin"), inventoryController.createInventory)
-router.post("/:id", authMiddleware.protect, authMiddleware.authorizedRole("admin"), inventoryController.updatedInventory)
+router.put("/:id", authMiddleware.protect, authMiddleware.authorizedRole("admin"), inventoryController.updatedInventory)
 router.delete("/:id", authMiddleware.protect, authMiddleware.authorizedRole("admin"), inventoryController.deleteInventory)
-
-
-
 router.get("/:id", inventoryController.getInventoryByID)
-// router.get("/", inventoryController.getInventoryByType)
 router.get("/", inventoryController.getInventory)
+// router.get("/", inventoryController.getInventoryByType)
+
 
 
 module.exports = router

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import API from "../services/api";
 import { useRef } from "react";
+import { handlePayment } from "../services/paymentService";
+import { useNavigate } from "react-router-dom";
 
 function Ropeway() {
   const dateRef = useRef();
@@ -30,8 +32,8 @@ function Ropeway() {
 
     if (route === "Bhairobaba - Bhawan") {
       return {
-        pickupPoint: "Bhairobaba",
-        dropPoint: "Bhawan"
+        pickupPoint: "bhairobaba",
+        dropPoint: "bhawan"
       };
     }
   };
@@ -53,31 +55,54 @@ function Ropeway() {
   }, [route, date]);
 
   // BOOKING
-  const handleBooking = async () => {
-    setError("");
-    setMessage("");
-
+  const validateForm = () => {
     if (!selectedInventoryId) {
-      setError("Please select a slot");
-      return;
+      return "Please select a slot";
+    }
+    if (p.age < 3) {
+      return `Pilgrim ${i + 1}: Must be 3+ for ropeway`;
+    }
+
+    if (!date) {
+      return "Please select a travel date";
+    }
+    if (totalPilgrims < 1) {
+      return "At least 1 pilgrim required";
     }
     if (totalPilgrims > 6) {
-      setError("Maximum 6 pilgrims allowed");
+      return "Maximum 6 pilgrims allowed";
+    }
+    for (let i = 0; i < pilgrims.length; i++) {
+      const p = pilgrims[i];
+
+      if (!p.name) return `Pilgrim ${i + 1}: Name required`;
+      if (!p.gender) return `Pilgrim ${i + 1}: Gender required`;
+      if (!p.age || p.age <= 0) return `Pilgrim ${i + 1}: Valid age required`;
+      if (!p.idType) return `Pilgrim ${i + 1}: ID Type required`;
+      if (!p.idNumber) return `Pilgrim ${i + 1}: ID Number required`;
+    }
+
+    return null;
+  };
+  const navigate = useNavigate();
+  const handleBooking = () => {
+    setError("");
+    setMessage("");
+    const errorMsg = validateForm();
+    if (errorMsg) {
+      setError(errorMsg);
       return;
     }
-
-    try {
-      await API.post("/booking/book", {
+    handlePayment({
+      amount: totalPilgrims * selectedSlot.price, // ✅ now safe
+      bookingData: {
         inventoryId: selectedInventoryId,
         totalPersons: totalPilgrims,
-        unitsBooked:totalPilgrims,
-        pilgrims
-      });
-
-      setMessage("Booking successful");
-    } catch (err) {
-      setError(err.response?.data?.message || "Booking failed");
-    }
+        unitsBooked: totalPilgrims,
+        pilgrims,
+      },
+      navigate,
+    });
   };
   const handlePilgrimChange = (index, field, value) => {
     const updated = [...pilgrims];
@@ -87,25 +112,25 @@ function Ropeway() {
 
   return (
     <div className="px-12 py-6 bg-[#fdf6f6]">
-{/* INSTRUCTIONS */}
-<div className="mb-6">
-  <h3 className="font-bold mb-2">Important Instructions:</h3>
-  <ul className="list-disc ml-6 text-sm space-y-1">
-    <li>Ropeway Service booking is required for pilgrims of age 3 years and above only.</li>
-    <li>
-      Infants/Children below 3 years of age will be allowed to travel free and equivalent to the number of Pilgrims.
-      Passenger(s) will be required to produce valid age proof of children at the entry gate.
-    </li>
-    <li>
-      The details once submitted at the time of Booking will not be modified and changes to Service Date / Pilgrim Details will not be entertained once the Booking is completed.
-    </li>
-    <li>
-      Passengers have to report as per the time slot selected, failing which the services may be denied.
-      Tickets will be valid for only two hours after the check-in.
-    </li>
+      {/* INSTRUCTIONS */}
+      <div className="mb-6">
+        <h3 className="font-bold mb-2">Important Instructions:</h3>
+        <ul className="list-disc ml-6 text-sm space-y-1">
+          <li>Ropeway Service booking is required for pilgrims of age 3 years and above only.</li>
+          <li>
+            Infants/Children below 3 years of age will be allowed to travel free and equivalent to the number of Pilgrims.
+            Passenger(s) will be required to produce valid age proof of children at the entry gate.
+          </li>
+          <li>
+            The details once submitted at the time of Booking will not be modified and changes to Service Date / Pilgrim Details will not be entertained once the Booking is completed.
+          </li>
+          <li>
+            Passengers have to report as per the time slot selected, failing which the services may be denied.
+            Tickets will be valid for only two hours after the check-in.
+          </li>
 
-  </ul>
-</div>
+        </ul>
+      </div>
       <h2 className="text-xl font-bold text-[#8B0000] border-b pb-2 mb-4">
         Ropeway Booking Details
       </h2>
@@ -143,14 +168,14 @@ function Ropeway() {
 
       <div className="flex gap-4 mb-4">
         {slots.map((slot, index) => {
-          const isSelected = selectedSlot === index;
+          const isSelected = selectedSlot?._id === slot._id;
 
           return (
             <div
               key={slot._id}
               onClick={() => {
                 if (slot.availableUnits > 0) {
-                  setSelectedSlot(index);
+                  setSelectedSlot(slot);
                   setSelectedInventoryId(slot._id);
                 }
               }}

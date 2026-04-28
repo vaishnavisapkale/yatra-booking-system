@@ -7,7 +7,6 @@ const pilgrimSchema = new mongoose.Schema({
     age: Number,
     idType: String,
     idNumber: String,
-    // isPrimary: boolean
 });
 
 const bookingSchema = new mongoose.Schema({

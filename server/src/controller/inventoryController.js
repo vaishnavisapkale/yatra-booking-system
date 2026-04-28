@@ -57,7 +57,7 @@ async function createInventory(req, res) {
   }
 }
 
-    //Get Inventory (User)
+//Get Inventory (User)
 const getInventory = async (req, res) => {
   try {
     const { type, location, pickupPoint, dropPoint, date } = req.query;
@@ -76,17 +76,10 @@ const getInventory = async (req, res) => {
       }
     } else {
       // carservice / ropeway
-    if (pickupPoint && dropPoint) {
-    filter.pickupPoint = pickupPoint.toLowerCase().trim();
-    filter.dropPoint = dropPoint.toLowerCase().trim();
-  }
-
-    //   if (pickupPoint) {
-    //     filter.pickupPoint = pickupPoint.toLowerCase();
-    //   }
-    //   if (dropPoint) {
-    //     filter.dropPoint = dropPoint.toLowerCase();
-    //   }
+      if (pickupPoint && dropPoint) {
+        filter.pickupPoint = pickupPoint.toLowerCase().trim();
+        filter.dropPoint = dropPoint.toLowerCase().trim();
+      }
     }
 
     //  DATE FILTER
@@ -102,11 +95,7 @@ const getInventory = async (req, res) => {
         $lte: end
       };
     }
-
-    console.log("FINAL FILTER:", filter);
-
     const inventory = await inventoryModel.find(filter);
-
     res.json({
       count: inventory.length,
       inventory
@@ -120,32 +109,30 @@ const getInventory = async (req, res) => {
   }
 };
 
-    //get single inventory
-    async function getInventoryByID(req, res) {
-        try {
-            const inventory = await inventoryModel.findById(req.params.id);
-            if (!inventory) {
-                return res.status(404).json({
-                    message: "Inventory not found"
-                });
-            }
-            res.json(inventory);
-        } catch (err) {
-            res.status(500).json({
-                message: "Error fetching inventory",
-                error: err.message
-            });
-        }
+//get single inventory
+async function getInventoryByID(req, res) {
+  try {
+    const inventory = await inventoryModel.findById(req.params.id);
+    if (!inventory) {
+      return res.status(404).json({
+        message: "Inventory not found"
+      });
     }
+    res.json(inventory);
+  } catch (err) {
+    res.status(500).json({
+      message: "Error fetching inventory",
+      error: err.message
+    });
+  }
+}
 
-    //get inventory by type
-    async function getInventoryByType(req, res) {
+//get inventory by type
+async function getInventoryByType(req, res) {
   try {
     const { type } = req.query;
 
     let filter = {};
-
-    // 🔥 agar type aaya hai to filter lagao
     if (type) {
       filter.serviceType = type;
     }
@@ -168,39 +155,39 @@ const getInventory = async (req, res) => {
 
 }
 
-    //update inventory
-    async function updatedInventory(req, res) {
-        try {
-            const updatedInventory = await inventoryModel.findByIdAndUpdate(
-                req.params.id, req.body, { new: true }
-            )
-            res.json({
-                message: "Inventory updated successfully",
-                updatedInventory
-            });
-        } catch (err) {
-            res.status(500).json({
-                message: "Error updating inventory",
-                error: err.message
-            });
+//update inventory
+async function updatedInventory(req, res) {
+  try {
+    const updatedInventory = await inventoryModel.findByIdAndUpdate(
+      req.params.id, req.body, { new: true }
+    )
+    res.json({
+      message: "Inventory updated successfully",
+      updatedInventory
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error updating inventory",
+      error: err.message
+    });
 
-        }
-    }
+  }
+}
 
-    async function deleteInventory(req, res){
-        try{
-            const deleteInventory = await inventoryModel.findByIdAndDelete(req.params.id)
-            res.json({
-                message:"Inventory deleted successfully"
-            })
-        }catch(err){
-            res.status(500).json({
+async function deleteInventory(req, res) {
+  try {
+    const deleteInventory = await inventoryModel.findByIdAndDelete(req.params.id)
+    res.json({
+      message: "Inventory deleted successfully"
+    })
+  } catch (err) {
+    res.status(500).json({
       message: "Error deleting inventory",
       error: error.message
     });
 
-        }
-    }
+  }
+}
 
 
-module.exports = {createInventory, getInventory, getInventoryByID,getInventoryByType, updatedInventory, deleteInventory}
+module.exports = { createInventory, getInventory, getInventoryByID, getInventoryByType, updatedInventory, deleteInventory }

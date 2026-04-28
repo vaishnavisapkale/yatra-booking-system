@@ -31,7 +31,7 @@ API.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem("refreshToken");
 
-        console.log("🔥 Calling refresh token API...");
+        console.log("Calling refresh token API...");
 
         const { data } = await axios.post(
           "http://localhost:3000/api/auth/refresh-token",
@@ -48,7 +48,7 @@ API.interceptors.response.use(
         return API(originalRequest);
 
       } catch (err) {
-        console.log("❌ Refresh failed");
+        console.log(" Refresh failed");
 
         localStorage.clear();
         window.location.href = "/";

@@ -164,8 +164,4 @@ async function resetpassword(req, res) {
     })
 }
 
-
-
-
-
 module.exports = { registerUser, loginUser, refereshToken, logoutUser, sendOtp, verifyOtp, resetpassword }

@@ -32,7 +32,7 @@ function Navbar() {
   return (
     <div className="w-full">
 
-      {/* 🔴 HEADER */}
+      {/* HEADER */}
       <div className="bg-[#8B0000] text-white px-8 py-4 flex justify-between items-center">
 
         {/* LEFT TITLE */}
@@ -52,9 +52,6 @@ function Navbar() {
             <div className="w-8 h-8 bg-white text-[#8B0000] rounded-full flex items-center justify-center">
               <User className="w-4 h-4" />
             </div>
-            {/* <span className="text-sm font-medium">
-              Welcome, User
-            </span> */}
           </div>
 
           {/* DROPDOWN */}

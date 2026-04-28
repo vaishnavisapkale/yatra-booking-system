@@ -1,6 +1,7 @@
 # 🛕 Yatra Booking System
 
-A full-stack pilgrimage booking platform inspired by the Shri Mata Vaishno Devi Shrine Board. This application allows users to book accommodation, battery car, and ropeway services with real-time availability and secure authentication.
+A full-stack pilgrimage booking platform inspired by the Shri Mata Vaishno Devi Shrine Board. The system enables users to book accommodation, battery car, and ropeway services with real-time availability, secure authentication, and integrated payments. It also handles real-world challenges like seat allocation, booking conflicts, and concurrent bookings using optimized backend logic.
+
 
 ---
 
@@ -14,7 +15,8 @@ A full-stack pilgrimage booking platform inspired by the Shri Mata Vaishno Devi 
 * 👥 Dynamic Pilgrim Details (Max 6)
 * ❌ Booking Cancellation
 * 📜 Booking History (My Bookings)
-* 💳 Razorpay Payment Integration (In Progress)
+* 💳 Razorpay Payment Integration
+*  🛠️ Admin Dashboard (Create & Manage Inventory)
 
 ---
 
@@ -47,12 +49,19 @@ A full-stack pilgrimage booking platform inspired by the Shri Mata Vaishno Devi 
   * Seat-based booking
   * Route + Slot selection
 
-### 4. Payment Flow (Planned)
+### 4. Payment Flow
 
-* Create Order
-* Razorpay Checkout
-* Payment Verification
-* Booking Confirmation after success
+* Create Order using backend
+* Razorpay Checkout integration
+* Payment verification on backend
+* Booking confirmation after successful payment
+
+### 5. Admin Dashboard
+
+* Create and manage inventory (Rooms, Cars, Ropeway)
+* Set availability, pricing, and capacity
+* View all bookings
+* Manage slots based on date and routes
 
 ---
 
@@ -77,7 +86,7 @@ A full-stack pilgrimage booking platform inspired by the Shri Mata Vaishno Devi 
 
 ### Payment
 
-* Razorpay (Integration in progress)
+* Razorpay (Fully Integrated)
 
 ---
 
@@ -158,17 +167,31 @@ npm run dev
 <img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/7cd09b5e-60e7-41fd-88b3-782bd5fffbf4" />
 <img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/b48ac1db-746c-4d81-9f3a-f19018d4fa3f" />
 <img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/2a67f410-ceae-4a76-8595-577580800079" />
+<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/10244172-090a-4e76-bae9-e0abf3210216" />
+<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/208e11fe-0f0f-491c-a2c5-d0075c5ab26f" />
+<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/6861260f-ca8d-4d5a-a5db-1cf4fbcbbb49" />
+<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/fc87e03f-42ea-4360-8008-3c33d0240070" />
+<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/e166454b-29c1-43fe-836c-b3760aaf7264" />
+<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/2cbc8c70-b077-46f1-93f3-4026d7b0e2d0" />
+<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/540b4b57-788e-4f70-ba6b-7e9eccabae41" />
+
+
+
+
+
+
+
+
 
 
 ---
 
 ## 🔥 Future Enhancements
 
-* ✅ Payment Integration (Razorpay)
 * 📄 Yatra Parchi PDF Generation
 * 📅 Smart Date Picker (Availability colors)
 * 🔔 Email Notifications
-* 📊 Admin Dashboard
+* 📊 Advanced Admin Analytics Dashboard
 
 ---
 

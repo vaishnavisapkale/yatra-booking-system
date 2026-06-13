@@ -1,26 +1,26 @@
-# 🛕 Yatra Booking System
+#Yatra Booking System
 
 A full-stack pilgrimage booking platform inspired by the Shri Mata Vaishno Devi Shrine Board. The system enables users to book accommodation, battery car, and ropeway services with real-time availability, secure authentication, and integrated payments. It also handles real-world challenges like seat allocation, booking conflicts, and concurrent bookings using optimized backend logic.
 
 
 ---
 
-## 🚀 Features
+## Features
 
-* 🔐 User Authentication (JWT + Refresh Token)
-* 🏨 Accommodation Booking
-* 🚗 Battery Car Booking (Route-based)
-* 🚡 Ropeway Booking (Slot-based)
-* 📅 Date-wise Inventory Management
-* 👥 Dynamic Pilgrim Details (Max 6)
-* ❌ Booking Cancellation
-* 📜 Booking History (My Bookings)
-* 💳 Razorpay Payment Integration
-*  🛠️ Admin Dashboard (Create & Manage Inventory)
+* User Authentication (JWT + Refresh Token)
+* Accommodation Booking
+* Battery Car Booking (Route-based)
+* Ropeway Booking (Slot-based)
+* Date-wise Inventory Management
+* Dynamic Pilgrim Details (Max 6)
+* Booking Cancellation
+* Booking History (My Bookings)
+* Razorpay Payment Integration
+* Admin Dashboard (Create & Manage Inventory)
 
 ---
 
-## 🧠 Key Functionalities
+## Key Functionalities
 
 ### 1. Authentication
 
@@ -65,7 +65,7 @@ A full-stack pilgrimage booking platform inspired by the Shri Mata Vaishno Devi 
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 
@@ -90,7 +90,7 @@ A full-stack pilgrimage booking platform inspired by the Shri Mata Vaishno Devi 
 
 ---
 
-## 📁 Folder Structure
+## Folder Structure
 
 ```
 project-root/
@@ -115,7 +115,7 @@ project-root/
 
 ---
 
-## ⚙️ Installation & Setup
+## Installation & Setup
 
 ### 1. Clone the repo
 
@@ -153,7 +153,7 @@ npm run dev
 
 ---
 
-## 📸 Screens (Optional)
+## Screens (Optional)
 
 * Login Page
 * Accommodation Booking
@@ -186,16 +186,16 @@ npm run dev
 
 ---
 
-## 🔥 Future Enhancements
+## Future Enhancements
 
-* 📄 Yatra Parchi PDF Generation
-* 📅 Smart Date Picker (Availability colors)
-* 🔔 Email Notifications
-* 📊 Advanced Admin Analytics Dashboard
+* Yatra Parchi PDF Generation
+* Smart Date Picker (Availability colors)
+* Email Notifications
+* Advanced Admin Analytics Dashboard
 
 ---
 
-## 👩‍💻 Author
+## Author
 
 Vaishnavi Sapkale
 

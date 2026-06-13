@@ -1,4 +1,4 @@
-##Yatra Booking System
+## Yatra Booking System
 
 A full-stack pilgrimage booking platform inspired by the Shri Mata Vaishno Devi Shrine Board. The system enables users to book accommodation, battery car, and ropeway services with real-time availability, secure authentication, and integrated payments. It also handles real-world challenges like seat allocation, booking conflicts, and concurrent bookings using optimized backend logic.
 

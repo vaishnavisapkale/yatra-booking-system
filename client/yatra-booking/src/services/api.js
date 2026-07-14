@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+
 const API = axios.create({
-  baseURL: "http://localhost:3000/api"
+  baseURL: BASE_URL
 });
 
 // token auto attach
@@ -34,7 +36,7 @@ API.interceptors.response.use(
         console.log("Calling refresh token API...");
 
         const { data } = await axios.post(
-          "http://localhost:3000/api/auth/refresh-token",
+          `${BASE_URL}/auth/refresh-token`,
           { token: refreshToken }
         );
 

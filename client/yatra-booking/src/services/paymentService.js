@@ -14,7 +14,7 @@ export const handlePayment = async ({
     });
 
     const options = {
-      key: "rzp_test_Shr5btwkY8GoxK",
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
       amount: data.amount,
       currency: "INR",
       order_id: data.id,

@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import API from "./.././../services/api"
+import { Receipt } from "lucide-react";
+import AdminLayout from "../../layouts/AdminLayout";
+import { Badge, EmptyState, Table, THead, TH, TBody, TR, TD } from "../../components/ui";
 
 function AllBookings() {
   const [bookings, setBookings] = useState([]);
@@ -28,53 +31,44 @@ const getRoute = (inventory) => {
   }, []);
 
   return (
-    <div className="p-6 bg-[#fdf6f6] min-h-screen">
-      <h2 className="text-xl font-bold text-[#8B0000] mb-6">
-        All Bookings
-      </h2>
-
-      <div className="grid grid-cols-6 bg-[#8B0000] text-white p-3 text-sm font-semibold">
-        {/* <div>User</div> */}
-        <div>Service</div>
-        <div>Date</div>
-        <div>Details</div>
-        <div>Amount</div>
-        <div>Status</div>
-        <div>Persons</div>
-      </div>
-
-      {bookings.map((b) => (
-        <div
-          key={b._id}
-          className="grid grid-cols-6 p-3 border-b bg-white items-center"
-        >
-          {/* <div>{b.user?.email}</div> */}
-
-          <div>{b.inventory?.serviceType}</div>
-
-          <div>
-            {b.checkInDate
-              ? new Date(b.checkInDate).toLocaleDateString()
-              : b.inventory?.date
-              ? new Date(b.inventory.date).toLocaleDateString()
-              : "-"}
-          </div>
-
-          <div>{getRoute(b.inventory)}</div>
-          <div>₹{b.totalAmount}</div>
-
-          <div>{b.status}</div>
-
-          <div>{b.totalPersons}</div>
-        </div>
-      ))}
-
-      {bookings.length === 0 && (
-        <p className="text-center mt-6 text-gray-500">
-          No bookings found
-        </p>
+    <AdminLayout title="All Bookings" subtitle="View every pilgrim booking across services">
+      {bookings.length === 0 ? (
+        <EmptyState icon={Receipt} title="No bookings found" />
+      ) : (
+        <Table>
+          <THead>
+            <TH>Service</TH>
+            <TH>Date</TH>
+            <TH>Details</TH>
+            <TH>Amount</TH>
+            <TH>Status</TH>
+            <TH>Persons</TH>
+          </THead>
+          <TBody>
+            {bookings.map((b) => (
+              <TR key={b._id}>
+                <TD className="capitalize">{b.inventory?.serviceType}</TD>
+                <TD>
+                  {b.checkInDate
+                    ? new Date(b.checkInDate).toLocaleDateString()
+                    : b.inventory?.date
+                    ? new Date(b.inventory.date).toLocaleDateString()
+                    : "-"}
+                </TD>
+                <TD>{getRoute(b.inventory)}</TD>
+                <TD>₹{b.totalAmount}</TD>
+                <TD>
+                  <Badge variant={b.status === "booked" ? "success" : "danger"}>
+                    {b.status}
+                  </Badge>
+                </TD>
+                <TD>{b.totalPersons}</TD>
+              </TR>
+            ))}
+          </TBody>
+        </Table>
       )}
-    </div>
+    </AdminLayout>
   );
 }
 

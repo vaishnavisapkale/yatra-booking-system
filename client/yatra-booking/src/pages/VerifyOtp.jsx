@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { Button, Input, FormField, Alert, Card } from "../components/ui";
 
 function VerifyOtp() {
   const [otp, setOtp] = useState("");
@@ -25,33 +26,28 @@ function VerifyOtp() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-orange-50">
+    <div className="flex min-h-screen items-center justify-center bg-surface-muted px-4">
+      <Card className="w-full max-w-sm">
+        <h2 className="mb-1 text-xl font-semibold text-gray-900">Verify OTP</h2>
+        <p className="mb-6 text-sm text-gray-500">
+          Enter the one-time password sent to {email || "your email"}
+        </p>
 
-      <div className="bg-white p-8 rounded-xl shadow-md w-96">
-        <h2 className="text-2xl text-orange-600 mb-4 text-center">
+        <FormField label="OTP">
+          <Input
+            type="text"
+            placeholder="Enter OTP"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+          />
+        </FormField>
+
+        <Button onClick={handleVerifyOtp} disabled={!otp} fullWidth className="mt-5">
           Verify OTP
-        </h2>
-        
-        <input
-          type="text"
-          placeholder="Enter OTP"
-          className="w-full p-3 border rounded mb-4"
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
-        />
+        </Button>
 
-        <button
-          onClick={handleVerifyOtp}
-          className="w-full bg-orange-500 text-white p-3 rounded"
-        >
-          Verify OTP
-        </button>
-
-        {message && (
-          <p className="text-center text-sm mt-3">{message}</p>
-        )}
-      </div>
-
+        {message && <Alert variant="info" className="mt-4">{message}</Alert>}
+      </Card>
     </div>
   );
 }

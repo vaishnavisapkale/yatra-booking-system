@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { Button, Input, FormField, Alert, Card } from "../components/ui";
 
 function ResetPassword() {
   const [newPassword, setNewPassword] = useState("");
@@ -30,33 +31,26 @@ function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-orange-50">
+    <div className="flex min-h-screen items-center justify-center bg-surface-muted px-4">
+      <Card className="w-full max-w-sm">
+        <h2 className="mb-1 text-xl font-semibold text-gray-900">Reset Password</h2>
+        <p className="mb-6 text-sm text-gray-500">Choose a new password for your account</p>
 
-      <div className="bg-white p-8 rounded-xl shadow-md w-96">
-        <h2 className="text-2xl text-orange-600 mb-4 text-center">
-          Reset Password
-        </h2>
+        <FormField label="New Password">
+          <Input
+            type="password"
+            placeholder="••••••••"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+        </FormField>
 
-        <input
-          type="password"
-          placeholder="Enter new password"
-          className="w-full p-3 border rounded mb-4"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-        />
-
-        <button
-          onClick={handleResetPassword}
-          className="w-full bg-orange-500 text-white p-3 rounded"
-        >
+        <Button onClick={handleResetPassword} disabled={!newPassword} fullWidth className="mt-5">
           Update Password
-        </button>
+        </Button>
 
-        {message && (
-          <p className="text-center text-green-600 text-sm mt-3">{message}</p>
-        )}
-      </div>
-
+        {message && <Alert variant="success" className="mt-4">{message}</Alert>}
+      </Card>
     </div>
   );
 }

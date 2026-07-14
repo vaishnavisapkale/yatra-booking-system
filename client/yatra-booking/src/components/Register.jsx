@@ -1,7 +1,8 @@
-import templeImg from "../assets/Login.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import API from "../services/api";
+import AuthLayout from "../layouts/AuthLayout";
+import { Button, Input, FormField, Alert } from "./ui";
 
 function Register() {
   const navigate = useNavigate();
@@ -37,98 +38,72 @@ function Register() {
       setTimeout(()=>{
    navigate("/");
       },1000)
-     
-    
+
+
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed ");
     }
   };
 
   return (
-    <div className="min-h-screen flex">
+    <AuthLayout>
+      <h2 className="mb-1 text-2xl font-semibold text-gray-900">Create account</h2>
+      <p className="mb-6 text-sm text-gray-500">Register to start booking your yatra services</p>
 
-      {/* LEFT SIDE */}
-      <div className="hidden md:flex w-1/2 relative">
-        <img src={templeImg} alt="temple" className="w-full h-full object-cover" />
+      {error && <Alert variant="error" className="mb-4">{error}</Alert>}
+      {message && <Alert variant="success" className="mb-4">{message}</Alert>}
 
-        <div className="absolute inset-0 bg-black/60 flex flex-col items-start justify-center px-16">
-          <h2 className="text-white text-4xl font-bold">Welcome to</h2>
-
-          <h1 className="text-orange-400 text-7xl font-extrabold mt-4 leading-tight">
-            SHRI MATA <br />
-            VAISHNODEVI <br />
-            SHRINE BOARD
-          </h1>
-        </div>
-      </div>
-
-      {/* RIGHT SIDE */}
-      <div className="flex w-full md:w-1/2 items-center justify-center bg-gradient-to-br from-orange-50 to-orange-100">
-
-        <div className="bg-white p-10 rounded-2xl shadow-xl w-96">
-
-          <h2 className="text-3xl font-normal text-orange-600 mb-6 text-center">
-            Create Account
-          </h2>
-
-          {/*  MESSAGE */}
-          {error && <p className="text-red-500 text-sm text-center mb-2">{error}</p>}
-          {message && <p className="text-green-600 text-sm text-center mb-2">{message}</p>}
-
-          {/* Name */}
-          <input
+      <div className="space-y-4">
+        <FormField label="Full Name">
+          <Input
             type="text"
-            placeholder="Full Name"
-            className="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:ring-2 focus:ring-orange-400 outline-none"
+            placeholder="Your full name"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
+        </FormField>
 
-          {/* Email */}
-          <input
+        <FormField label="Email Address">
+          <Input
             type="email"
-            placeholder="Email Address"
-            className="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:ring-2 focus:ring-orange-400 outline-none"
+            placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+        </FormField>
 
-          {/* Password */}
-          <input
+        <FormField label="Password">
+          <Input
             type="password"
-            placeholder="Password"
-            className="w-full border border-gray-300 p-3 rounded-lg mb-5 focus:ring-2 focus:ring-orange-400 outline-none"
+            placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-
-          {/* Button */}
-          <button
-            onClick={handleRegister}
-            disabled={!name || !email || !password}
-            className="w-full bg-orange-500 text-white p-3 rounded-lg font-semibold hover:bg-orange-600 disabled:opacity-50"
-          >
-            Register
-          </button>
-
-          {/* Divider */}
-          <div className="flex items-center my-5">
-            <div className="flex-1 h-px bg-gray-300"></div>
-            <span className="px-3 text-gray-400 text-sm">OR</span>
-            <div className="flex-1 h-px bg-gray-300"></div>
-          </div>
-
-          {/* Login link */}
-          <p className="text-sm text-center">
-            Already have an account?{" "}
-            <span className="text-orange-500 font-medium hover:underline">
-              <Link to="/">Login</Link>
-            </span>
-          </p>
-
-        </div>
+        </FormField>
       </div>
-    </div>
+
+      <Button
+        onClick={handleRegister}
+        disabled={!name || !email || !password}
+        fullWidth
+        className="mt-6"
+      >
+        Register
+      </Button>
+
+      <div className="my-5 flex items-center">
+        <div className="h-px flex-1 bg-gray-200" />
+        <span className="px-3 text-xs uppercase tracking-wide text-gray-400">Or</span>
+        <div className="h-px flex-1 bg-gray-200" />
+      </div>
+
+      <p className="text-center text-sm text-gray-500">
+        Already have an account?{" "}
+        <Link to="/" className="font-medium text-primary-600 hover:underline">
+          Login
+        </Link>
+      </p>
+    </AuthLayout>
   );
 }
 

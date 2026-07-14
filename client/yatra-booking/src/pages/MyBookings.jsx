@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import API from "../services/api";
+import { ClipboardList } from "lucide-react";
+import { PageHeader, Badge, Button, EmptyState, Table, THead, TH, TBody, TR, TD } from "../components/ui";
 
 function MyBookings() {
 
@@ -61,69 +63,55 @@ const getRoute = (inventory) => {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6 bg-[#fdf6f6]">
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-8">
 
-      {/* TITLE */}
-      <h2 className="text-xl font-bold text-[#8B0000] border-b pb-2 mb-6">
-        My Bookings
-      </h2>
+      <PageHeader title="My Bookings" subtitle="Track and manage your yatra service bookings" />
 
-      {/* TABLE HEADER */}
-      <div className="grid grid-cols-[1fr_1fr_2fr_1fr_1fr_1fr] bg-[#8B0000] text-white p-3 text-sm font-semibold">
-        <div>Service</div>
-        <div>Date</div>
-        <div>Details</div>
-        <div>Amount</div>
-        <div>Status</div>
-        <div>Action</div>
-      </div>
+      {loading && <p className="text-sm text-gray-500">Loading bookings...</p>}
 
-      {/* BOOKINGS */}
-     {books.map((b) => (
-  <div
-    key={b._id}
-    className="grid grid-cols-[1fr_1fr_2fr_1fr_1fr_1fr] p-3 border-b items-center bg-white"
-  >
-    <div>{b.inventory?.serviceType}</div>
-
-  <div>{getBookingDate(b)}</div>
-  <div>{getRoute(b.inventory)}</div>
-  <div>₹{b.totalAmount}</div>
-
-    {/* STATUS */}
-    <div>
-      <span
-        className={`px-2 py-1 text-xs rounded ${
-          b.status === "booked"
-            ? "bg-green-100 text-green-700"
-            : "bg-red-100 text-red-600"
-        }`}
-      >
-        {b.status}
-      </span>
-    </div>
-
-    {/* ACTION */}
-    <div>
-      {b.status === "booked" ? (
-        <button
-          onClick={() => handleCancel(b._id)} // 🔥 id change
-          className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
-        >
-          Cancel
-        </button>
-      ) : (
-        <span className="text-gray-400 text-sm">-</span>
+      {!loading && books.length === 0 && (
+        <EmptyState
+          icon={ClipboardList}
+          title="No bookings found"
+          description="Your booked services will appear here."
+        />
       )}
-    </div>
-  </div>
-))}
 
-      {/* EMPTY STATE */}
-      {books.length === 0 && (
-        <div className="text-center py-10 text-gray-500">
-          No bookings found
-        </div>
+      {!loading && books.length > 0 && (
+        <Table>
+          <THead>
+            <TH>Service</TH>
+            <TH>Date</TH>
+            <TH>Details</TH>
+            <TH>Amount</TH>
+            <TH>Status</TH>
+            <TH>Action</TH>
+          </THead>
+          <TBody>
+            {books.map((b) => (
+              <TR key={b._id}>
+                <TD className="capitalize">{b.inventory?.serviceType}</TD>
+                <TD>{getBookingDate(b)}</TD>
+                <TD>{getRoute(b.inventory)}</TD>
+                <TD>₹{b.totalAmount}</TD>
+                <TD>
+                  <Badge variant={b.status === "booked" ? "success" : "danger"}>
+                    {b.status}
+                  </Badge>
+                </TD>
+                <TD>
+                  {b.status === "booked" ? (
+                    <Button variant="danger" size="sm" onClick={() => handleCancel(b._id)}>
+                      Cancel
+                    </Button>
+                  ) : (
+                    <span className="text-sm text-gray-400">-</span>
+                  )}
+                </TD>
+              </TR>
+            ))}
+          </TBody>
+        </Table>
       )}
 
     </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { Button, Input, FormField, Alert, Card } from "../components/ui";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -32,34 +33,28 @@ function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-orange-50">
+    <div className="flex min-h-screen items-center justify-center bg-surface-muted px-4">
+      <Card className="w-full max-w-sm">
+        <h2 className="mb-1 text-xl font-semibold text-gray-900">Forgot Password</h2>
+        <p className="mb-6 text-sm text-gray-500">
+          Enter your registered email to receive a one-time password
+        </p>
 
-      <div className="bg-white p-8 rounded-xl shadow-md w-96">
-        <h2 className="text-2xl text-orange-600 mb-4 text-center">
-          Forgot Password
-        </h2>
+        <FormField label="Email Address">
+          <Input
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </FormField>
 
-        <input
-          type="email"
-          placeholder="Enter your email"
-          className="w-full p-3 border rounded mb-4 border-gray-300 focus:ring-2 focus:ring-orange-400 outline-none"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <button
-          onClick={handleSendOtp}
-          disabled={loading}
-          className="w-full bg-orange-500 text-white p-3 rounded"
-        >
+        <Button onClick={handleSendOtp} disabled={loading || !email} fullWidth className="mt-5">
           {loading ? "Sending..." : "Send OTP"}
-        </button>
+        </Button>
 
-        {message && (
-          <p className="text-center text-sm mt-3">{message}</p>
-        )}
-      </div>
-
+        {message && <Alert variant="info" className="mt-4">{message}</Alert>}
+      </Card>
     </div>
   );
 }

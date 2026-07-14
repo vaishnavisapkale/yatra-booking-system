@@ -1,64 +1,58 @@
 import { useNavigate } from "react-router-dom";
+import { PackagePlus, ListChecks, Receipt } from "lucide-react";
+import AdminLayout from "../../layouts/AdminLayout";
+import { Card, Button } from "../../components/ui";
+
+const SECTIONS = [
+  {
+    icon: PackagePlus,
+    title: "Create Inventory",
+    description: "Add rooms, ropeway or car service slots",
+    action: "Create",
+    path: "/admin/create-inventory",
+    variant: "primary",
+  },
+  {
+    icon: ListChecks,
+    title: "Manage Inventory",
+    description: "View and delete existing inventory",
+    action: "Manage",
+    path: "/admin/manage",
+    variant: "outline",
+  },
+  {
+    icon: Receipt,
+    title: "All Bookings",
+    description: "View all pilgrim bookings",
+    action: "View",
+    path: "/admin/bookings",
+    variant: "outline",
+  },
+];
 
 function AdminDashboard() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#fdf6f6] p-6">
-      <h1 className="text-2xl font-bold text-[#8B0000] mb-6">
-        Admin Dashboard
-      </h1>
-
-      <div className="grid md:grid-cols-3 gap-6">
-
-        {/* CREATE INVENTORY */}
-        <div className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
-          <h2 className="font-semibold text-lg mb-2">
-            Create Inventory
-          </h2>
-          <p className="text-sm text-gray-500 mb-4">
-            Add rooms, ropeway or car service slots
-          </p>
-
-          <button
-            onClick={() => navigate("/admin/create-inventory")}
-            className="w-full py-2 bg-[#8B0000] text-white rounded"
-          >
-            Create
-          </button>
-        </div>
-
-        {/* MANAGE INVENTORY */}
-        <div className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
-          <h2 className="font-semibold text-lg mb-2">
-            Manage Inventory
-          </h2>
-          <p className="text-sm text-gray-500 mb-4">
-            View and delete inventory
-          </p>
-
-          <button onClick={()=>{navigate("/admin/manage")}}
-          className="w-full py-2 border border-[#8B0000] text-[#8B0000] rounded">
-            Manage
-          </button>
-        </div>
-
-        {/* BOOKINGS */}
-        <div className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
-          <h2 className="font-semibold text-lg mb-2">
-            All Bookings
-          </h2>
-          <p className="text-sm text-gray-500 mb-4">
-            View all user bookings
-          </p>
-
-          <button onClick={()=> navigate("/admin/bookings")} className="w-full py-2 border border-[#8B0000] text-[#8B0000] rounded">
-            View
-          </button>
-        </div>
-
+    <AdminLayout title="Admin Dashboard" subtitle="Manage inventory and monitor bookings">
+      <div className="grid gap-6 md:grid-cols-3">
+        {SECTIONS.map((section) => {
+          const Icon = section.icon;
+          return (
+            <Card key={section.title} className="flex flex-col">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary-50 text-primary-600">
+                <Icon className="h-5 w-5" />
+              </div>
+              <h2 className="mb-1 text-base font-semibold text-gray-900">{section.title}</h2>
+              <p className="mb-4 flex-grow text-sm text-gray-500">{section.description}</p>
+              <Button variant={section.variant} fullWidth onClick={() => navigate(section.path)}>
+                {section.action}
+              </Button>
+            </Card>
+          );
+        })}
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 

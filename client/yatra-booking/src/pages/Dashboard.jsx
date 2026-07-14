@@ -1,59 +1,64 @@
-import { User, Car, CableCar, Hotel } from "lucide-react";
+import { Car, CableCar, Hotel, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+const SERVICES = [
+  {
+    icon: Hotel,
+    title: "Accommodation",
+    description: "Book rooms at Katra, Ardhkuwari or Bhawan for your stay.",
+    path: "/accommodation",
+  },
+  {
+    icon: Car,
+    title: "Car Service",
+    description: "Reserve a battery car slot for a comfortable, timed journey.",
+    path: "/car-service",
+  },
+  {
+    icon: CableCar,
+    title: "Ropeway",
+    description: "Book Bhawan to Bhairobaba ropeway tickets in advance.",
+    path: "/ropeway",
+  },
+];
+
 function Dashboard() {
-    const navigate = useNavigate();
-    return (
-        <div className="py-12 bg-[#fdf6f6] ">
+  const navigate = useNavigate();
 
-            {/* 👋 WELCOME SECTION */}
-            <div className="pt-2">
-                <h2 className="text-5xl text-center font-bold text-orange-800">
-                    Plan Your Yatra
-                </h2>
-                <p className="text-orange-500 text-center mt-4 text-sm font-semibold">
-                    Book services for your pilgrimage easily
-                </p>
-            </div>
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-8">
+      <div className="mb-10 text-center">
+        <p className="mb-2 text-xs uppercase tracking-[0.3em] text-accent-600">Yatra Services</p>
+        <h2 className="text-4xl font-semibold text-gray-900">Plan Your Yatra</h2>
+        <p className="mt-2 text-sm italic text-gray-500">
+          A sacred journey, simply booked.
+        </p>
+      </div>
 
-            {/* 🔥 SERVICES */}
-            <div className="flex items-center justify-center min-h-[60vh] px-10">
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 w-full max-w-7xl">
-                    {/* Accommodation */}
-                    <div onClick={() => navigate("/accommodation")} className="bg-white p-10 rounded-3xl shadow-lg hover:shadow-2xl transition cursor-pointer text-center flex flex-col justify-center items-center h-80">
-                        <Hotel className="w-20 h-20 text-orange-600 mb-4" />
-                        <h3  className="text-2xl font-semibold text-orange-600">Accommodation</h3>
-                        <p className="text-gray-500 mt-3">
-                            Book rooms for your stay
-                        </p>
-                    </div>
-
-                    {/* Car Service */}
-                    <div onClick={() => navigate("/car-service")}  className="bg-white p-10 rounded-3xl shadow-lg hover:shadow-2xl transition cursor-pointer text-center flex flex-col justify-center items-center h-80">
-                        <Car className="w-20 h-20 text-orange-600 mb-4" />
-                        <h3 className="text-2xl font-semibold text-orange-600">Car Service</h3>
-                        <p className="text-gray-500 mt-3">
-                            Book battery car for travel
-                        </p>
-                    </div>
-
-                    {/*  Ropeway */}
-                    <div onClick={() => navigate("/ropeway")} className="bg-white p-10 rounded-3xl shadow-lg hover:shadow-2xl transition cursor-pointer text-center flex flex-col justify-center items-center h-80">
-                        <CableCar className="w-20 h-20 text-orange-600 mb-4" />
-                        <h3 className="text-2xl font-semibold text-orange-600">Ropeway</h3>
-                        <p className="text-gray-500 mt-3">
-                            Bhawan to Bhaironath ropeway
-                        </p>
-                    </div>
-
-
-
-                </div>
-
-            </div>
-
-        </div>
-    );
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {SERVICES.map((service) => {
+          const Icon = service.icon;
+          return (
+            <button
+              key={service.title}
+              onClick={() => navigate(service.path)}
+              className="group flex flex-col items-start rounded-lg border border-gray-200 bg-surface p-6 text-left shadow-card transition-all hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-card-hover focus-ring"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-50 text-primary-600">
+                <Icon className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">{service.title}</h3>
+              <p className="mt-1.5 text-sm text-gray-500">{service.description}</p>
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary-600">
+                Book now
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 export default Dashboard;

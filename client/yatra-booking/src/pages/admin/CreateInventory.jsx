@@ -2,6 +2,8 @@ import { useState } from "react";
 import API from "./.././../services/api"
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import AdminLayout from "../../layouts/AdminLayout";
+import { Card, FormField, Select, Input, Button, Toast } from "../../components/ui";
 
 function CreateInventory() {
   const [toast, setToast] = useState(null);
@@ -64,9 +66,9 @@ function CreateInventory() {
     });
    setTimeout(() => {
     setToast(null)
-  navigate("/admin"); 
+  navigate("/admin");
    },3000);
-  
+
 
   } catch (err) {
     setToast({
@@ -75,125 +77,121 @@ function CreateInventory() {
     });
   }
 
- 
+
 };
 
   return (
-    <div className="min-h-screen bg-[#fdf6f6] p-6">
-      <h1 className="text-2xl font-bold text-[#8B0000] mb-6">
-        Create Inventory
-      </h1>
+    <AdminLayout title="Create Inventory" subtitle="Add rooms, ropeway or car service slots">
+      <Card>
+        <div className="grid gap-4 md:grid-cols-2">
 
-      <div className="bg-white p-6 rounded-xl shadow grid md:grid-cols-2 gap-4">
+          <FormField label="Service Type">
+            <Select name="serviceType" value={form.serviceType} onChange={handleChange}>
+              <option value="accommodation">Accommodation</option>
+              <option value="carservice">Car Service</option>
+              <option value="ropeway">Ropeway</option>
+            </Select>
+          </FormField>
 
-        <select name="serviceType" onChange={handleChange} className="p-2 border rounded">
-          <option value="accommodation">Accommodation</option>
-          <option value="carservice">Car Service</option>
-          <option value="ropeway">Ropeway</option>
-        </select>
+          {form.serviceType === "accommodation" ? (
+            <FormField label="Location">
+              <Select name="location" value={form.location} onChange={handleChange}>
+                <option value="">Select Location</option>
+                <option value="katra">Katra</option>
+                <option value="ardhkuwari">Ardhkuwari</option>
+                <option value="bhawan">Bhawan</option>
+              </Select>
+            </FormField>
+          ) : (
+            <>
+              {/* PICKUP */}
+              <FormField label="Pickup Point">
+                <Select name="pickupPoint" value={form.pickupPoint} onChange={handleChange}>
+                  <option value="">Select Pickup</option>
 
-        {form.serviceType === "accommodation" ? (
-          <select
-            name="location"
-            value={form.location}
-            onChange={handleChange}
-            className="p-2 border rounded"
-          >
-            <option value="">Select Location</option>
-            <option value="katra">Katra</option>
-            <option value="ardhkuwari">Ardhkuwari</option>
-            <option value="bhawan">Bhawan</option>
-          </select>
-        ) : (
-          <>
-            {/* PICKUP */}
-            <select
-              name="pickupPoint"
-              value={form.pickupPoint}
+                  {form.serviceType === "ropeway" && (
+                    <>
+                      <option value="bhawan">Bhawan</option>
+                      <option value="bhairobaba">Bhairobaba</option>
+                    </>
+                  )}
+
+                  {form.serviceType === "carservice" && (
+                    <>
+                      <option value="ardhkuwari">Ardhkuwari</option>
+                      <option value="bhawan">Bhawan</option>
+                    </>
+                  )}
+                </Select>
+              </FormField>
+
+              {/* DROP */}
+              <FormField label="Drop Point">
+                <Select name="dropPoint" value={form.dropPoint} onChange={handleChange}>
+                  <option value="">Select Drop</option>
+
+                  {form.serviceType === "ropeway" && (
+                    <>
+                      <option value="bhawan">Bhawan</option>
+                      <option value="bhairobaba">Bhairobaba</option>
+                    </>
+                  )}
+
+                  {form.serviceType === "carservice" && (
+                    <>
+                      <option value="ardhkuwari">Ardhkuwari</option>
+                      <option value="bhawan">Bhawan</option>
+                    </>
+                  )}
+                </Select>
+              </FormField>
+            </>
+          )}
+
+          <FormField label="Date">
+            <Input
+              type="date"
+              name="date"
+              ref={dateRef}
+              value={form.date}
               onChange={handleChange}
-              className="p-2 border rounded"
-            >
-              <option value="">Select Pickup</option>
+              onClick={() => dateRef.current.showPicker()}
+              className="cursor-pointer"
+            />
+          </FormField>
 
-              {form.serviceType === "ropeway" && (
-                <>
-                  <option value="bhawan">Bhawan</option>
-                  <option value="bhairobaba">Bhairobaba</option>
-                </>
-              )}
+          {form.serviceType !== "accommodation" && (
+            <FormField label="Time / Slot">
+              <Input name="time" placeholder="e.g. 10:00 AM" value={form.time} onChange={handleChange} />
+            </FormField>
+          )}
 
-              {form.serviceType === "carservice" && (
-                <>
-                  <option value="ardhkuwari">Ardhkuwari</option>
-                  <option value="bhawan">Bhawan</option>
-                </>
-              )}
-            </select>
+          <FormField label="Total Units">
+            <Input name="totalUnits" placeholder="Total Units" value={form.totalUnits} onChange={handleChange} />
+          </FormField>
 
-            {/* DROP */}
-            <select
-              name="dropPoint"
-              value={form.dropPoint}
+          <FormField label="Price Per Unit">
+            <Input name="price" placeholder="Price Per Unit" value={form.price} onChange={handleChange} />
+          </FormField>
+
+          <FormField label="Capacity Per Unit">
+            <Input
+              name="capacityPerUnit"
+              placeholder="Capacity Per Unit"
+              value={form.capacityPerUnit}
               onChange={handleChange}
-              className="p-2 border rounded"
-            >
-              <option value="">Select Drop</option>
+            />
+          </FormField>
 
-              {form.serviceType === "ropeway" && (
-                <>
-                  <option value="bhawan">Bhawan</option>
-                  <option value="bhairobaba">Bhairobaba</option>
-                </>
-              )}
-
-              {form.serviceType === "carservice" && (
-                <>
-                  <option value="ardhkuwari">Ardhkuwari</option>
-                  <option value="bhawan">Bhawan</option>
-                </>
-              )}
-            </select>
-          </>
-        )}
-
-        <input
-          type="date"
-          name="date"
-          ref={dateRef}
-          value={form.date}
-          onChange={handleChange}
-          onClick={() => dateRef.current.showPicker()}
-          className="p-2 border rounded w-full cursor-pointer"
-        />
-        {form.serviceType !== "accommodation" && (
-          <input
-            name="time"
-            placeholder="Time / Slot"
-            onChange={handleChange}
-            className="p-2 border rounded"
-          />
-        )}
-        <input name="totalUnits" placeholder="Total Units" onChange={handleChange} className="p-2 border rounded" />
-        <input name="price" placeholder="Price Per Unit" onChange={handleChange} className="p-2 border rounded" />
-        <input name="capacityPerUnit" placeholder="Capacity Per Unit" onChange={handleChange} className="p-2 border rounded" />
-
-      </div>
-
-      <button
-        onClick={handleSubmit}
-        className="mt-6 px-6 py-2 bg-[#8B0000] text-white rounded"
-      >
-        Create Inventory
-      </button>
-      {toast && (
-        <div
-          className={`fixed top-24 left-1/2 -translate-x-1/2 px-4 py-2  rounded shadow text-white transition ${toast.type === "success" ? "bg-green-500" : "bg-red-500"
-            }`}
-        >
-          {toast.message}
         </div>
-      )}
-    </div>
+      </Card>
+
+      <Button onClick={handleSubmit} className="mt-6">
+        Create Inventory
+      </Button>
+
+      <Toast toast={toast} />
+    </AdminLayout>
 
   );
 

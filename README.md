@@ -153,39 +153,6 @@ npm run dev
 
 ---
 
-## Screens (Optional)
-
-* Login Page
-* Accommodation Booking
-* Car Service Booking
-* Ropeway Booking
-* My Bookings Page
-
-<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/d719ba05-4faa-4d60-858f-ed908ddb32fa" />
-<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/9da3fa96-2d46-4991-80c8-3e0c30585fb7" />
-<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/23c2b76b-6ce3-47c3-9b2c-d888f2dc307d" />
-<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/7cd09b5e-60e7-41fd-88b3-782bd5fffbf4" />
-<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/b48ac1db-746c-4d81-9f3a-f19018d4fa3f" />
-<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/2a67f410-ceae-4a76-8595-577580800079" />
-<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/10244172-090a-4e76-bae9-e0abf3210216" />
-<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/208e11fe-0f0f-491c-a2c5-d0075c5ab26f" />
-<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/6861260f-ca8d-4d5a-a5db-1cf4fbcbbb49" />
-<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/fc87e03f-42ea-4360-8008-3c33d0240070" />
-<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/e166454b-29c1-43fe-836c-b3760aaf7264" />
-<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/2cbc8c70-b077-46f1-93f3-4026d7b0e2d0" />
-<img width="1438" height="696" alt="image" src="https://github.com/user-attachments/assets/540b4b57-788e-4f70-ba6b-7e9eccabae41" />
-
-
-
-
-
-
-
-
-
-
----
-
 ## Future Enhancements
 
 * Yatra Parchi PDF Generation
@@ -199,8 +166,3 @@ npm run dev
 
 Vaishnavi Sapkale
 
----
-
-## ⭐ If you like this project
-
-Give it a ⭐ on GitHub!
